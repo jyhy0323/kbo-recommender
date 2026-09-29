@@ -247,6 +247,45 @@ copyBtn.addEventListener("click", () => {
     });
 });
 
+// 6-1. 결과 리포트 Markdown(.md) 파일 다운로드 기능
+const downloadBtn = document.getElementById("downloadBtn");
+downloadBtn.addEventListener("click", () => {
+    const team = document.getElementById("primaryTeam").innerText;
+    const headline = document.getElementById("resultHeadline").innerText;
+    const matchRate = document.getElementById("matchRate").innerText;
+    const subTeam = document.getElementById("subTeam").innerText;
+    const reason = document.getElementById("resultReason").innerText;
+    const cheer = document.getElementById("cheerSong").innerText;
+    const food = document.getElementById("foodStadium").innerText;
+    const vibe = document.getElementById("recentVibe").innerText;
+
+    const markdownContent = `# ⚾ 나의 AI KBO 응원팀 매칭 리포트\n\n` +
+        `> **${headline}**\n\n` +
+        `## 🏆 1순위 추천 구단: ${team} (${matchRate})\n` +
+        `- **${subTeam}**\n\n` +
+        `---\n\n` +
+        `### 🎯 추천 이유\n` +
+        `${reason}\n\n` +
+        `### 🎵 대표 응원가\n` +
+        `${cheer}\n\n` +
+        `### 🍗 홈구장 및 필수 먹거리\n` +
+        `${food}\n\n` +
+        `### 🔥 최근 실시간 구단 소식 & 분위기\n` +
+        `${vibe}\n\n` +
+        `---\n` +
+        `*생성일시: ${new Date().toLocaleDateString('ko-KR')} | AI KBO Team Recommender*\n`;
+
+    const blob = new Blob([markdownContent], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${team.replace(/\s+/g, '_')}_추천리포트.md`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+});
+
 // 7. 다시 테스트하기 (초기화)
 retryBtn.addEventListener("click", () => {
     for (let key in userAnswers) {
