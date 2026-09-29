@@ -6,6 +6,13 @@
     <title>AI KBO 야구 응원팀 추천기 | 나만의 야구팀 찾기</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- PWA 모바일 앱 설치 지원 -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#1a4b8c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="KBO추천">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
 </head>
 <body>
     <div class="container">
@@ -96,5 +103,15 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        // PWA 서비스 워커 등록 (스마트폰 앱 설치 활성화)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/sw.js')
+                    .then(reg => console.log('✅ PWA 서비스 워커 등록 성공:', reg.scope))
+                    .catch(err => console.log('❌ PWA 서비스 워커 등록 실패:', err));
+            });
+        }
+    </script>
 </body>
 </html>
