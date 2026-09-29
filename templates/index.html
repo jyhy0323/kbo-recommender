@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI KBO 야구 응원팀 추천기 | 나만의 야구팀 찾기</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 영역 -->
+        <header class="header">
+            <div class="badge">⚾ AI 야구 성향 테스트</div>
+            <h1>나에게 딱 맞는<br><span class="highlight">KBO 응원팀</span> 찾기</h1>
+            <p class="subtitle">15가지 밸런스 질문에 답하면 Gemini Flash Lite AI가 찰떡궁합인 프로야구 구단을 찾아드립니다!</p>
+        </header>
+
+        <!-- 설문 진행 상태 바 -->
+        <div class="progress-section" id="progressSection">
+            <div class="progress-info">
+                <span>진행 상황</span>
+                <span id="progressText">0 / 15 완료</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- 15개 밸런스 질문 폼 -->
+        <form id="quizForm" class="quiz-container">
+            <!-- 질문 카드는 app.js에서 15개 문항을 깔끔하게 자동 렌더링합니다 -->
+            <div id="questionsWrapper"></div>
+
+            <div class="submit-wrapper">
+                <button type="submit" id="submitBtn" class="btn-primary" disabled>
+                    ⚾ AI에게 내 응원팀 추천받기
+                </button>
+            </div>
+        </form>
+
+        <!-- 로딩 인디케이터 -->
+        <div id="loading" class="loading-container hidden">
+            <div class="spinner"></div>
+            <h3>AI 야구 코치가 결과를 분석 중입니다...</h3>
+            <p>15개 성향 데이터와 최신 KBO 뉴스 및 순위를 종합하고 있어요 🔍</p>
+        </div>
+
+        <!-- 결과 표시 영역 -->
+        <section id="resultSection" class="result-section hidden">
+            <div class="result-card">
+                <div class="result-header">
+                    <span class="match-badge" id="matchRate">매칭률 95%</span>
+                    <h2 class="headline" id="resultHeadline">"낭만과 열정의 끝판왕!"</h2>
+                    <h1 class="team-name" id="primaryTeam">한화 이글스</h1>
+                    <p class="sub-team" id="subTeam">차선책 추천: 롯데 자이언츠</p>
+                </div>
+
+                <div class="result-body">
+                    <div class="info-block">
+                        <h3>🎯 추천 이유</h3>
+                        <p id="resultReason"></p>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="card-icon">🎵</div>
+                            <h4>대표 응원가</h4>
+                            <p id="cheerSong"></p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-icon">🍗</div>
+                            <h4>홈구장 & 대표 먹거리</h4>
+                            <p id="foodStadium"></p>
+                        </div>
+                    </div>
+
+                    <div class="info-block highlight-block">
+                        <h3>🔥 실시간 팀 소식 & 분위기</h3>
+                        <p id="recentVibe"></p>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" id="copyBtn" class="btn-secondary">📋 결과 복사하기</button>
+                    <button type="button" id="retryBtn" class="btn-outline">🔄 다시 테스트하기</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 푸터 -->
+        <footer class="footer">
+            <p>Powered by Google Gemini Flash Lite & Serper Search API | KBO Team Recommender</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
