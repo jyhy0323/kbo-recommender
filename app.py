@@ -63,6 +63,14 @@ def get_kbo_latest_context():
 # 4. 보안 접근 인증 및 라우트
 @app.route("/")
 def index():
+    # URL 파라미터로 ?pw=0110 이 들어오면 바로 자동 로그인 처리 (원클릭 프리패스 입장)
+    pw_param = request.args.get("pw")
+    if pw_param and pw_param.strip() == ACCESS_PASSWORD:
+        session["authenticated"] = True
+        session.permanent = True
+        logging.info("🔓 URL 쿼리 파라미터를 통한 원클릭 자동 인증 성공")
+        return redirect(url_for("index"))
+
     if not session.get("authenticated"):
         return render_template("login.html")
     return render_template("index.html")
