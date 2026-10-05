@@ -5,20 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI KBO 야구 응원팀 추천기 | 나만의 야구팀 찾기</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
     <!-- PWA 모바일 앱 설치 지원 -->
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <meta name="theme-color" content="#1a4b8c">
+    <meta name="theme-color" content="#0a0f1d">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="KBO추천">
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+
+    <!-- SNS 공유 카드 이미지(PNG) 저장을 위한 html2canvas 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
+    <!-- 야구장 야간 경기 앰비언트 배경 레이어 (스타디움 조명 타워 & 그라운드 잔디 광원) -->
+    <div class="stadium-backdrop" aria-hidden="true">
+        <div class="floodlight-beam beam-left"></div>
+        <div class="floodlight-beam beam-center"></div>
+        <div class="floodlight-beam beam-right"></div>
+        <div class="field-grass-glow"></div>
+        <div class="stadium-vignette"></div>
+    </div>
+
     <div class="container">
         <!-- 헤더 영역 -->
         <header class="header">
-            <div class="badge">⚾ AI 야구 성향 테스트</div>
+            <div class="badge">⚾ 2026 KBO 야구 성향 테스트</div>
             <h1>나에게 딱 맞는<br><span class="highlight">KBO 응원팀</span> 찾기</h1>
             <p class="subtitle">15가지 밸런스 질문에 답하면 Gemini Flash Lite AI가 찰떡궁합인 프로야구 구단을 찾아드립니다!</p>
         </header>
@@ -36,7 +50,7 @@
 
         <!-- 15개 밸런스 질문 폼 -->
         <form id="quizForm" class="quiz-container">
-            <!-- 질문 카드는 app.js에서 15개 문항을 깔끔하게 자동 렌더링합니다 -->
+            <!-- 질문 카드는 app.js에서 카드 슬라이드 방식으로 자동 렌더링됩니다 -->
             <div id="questionsWrapper"></div>
 
             <div class="submit-wrapper">
@@ -92,15 +106,23 @@
                     </div>
 
                     <div class="info-grid">
-                        <div class="info-card">
+                        <!-- 대표 응원가 카드 + 유튜브 영상 링크 -->
+                        <div class="info-card cheer-card">
                             <div class="card-icon">🎵</div>
                             <h4>대표 응원가</h4>
                             <p id="cheerSong"></p>
+                            <a id="youtubeCheerLink" href="#" target="_blank" rel="noopener noreferrer" class="action-link-btn youtube-btn">
+                                <span>▶ 유튜브로 응원가 듣기</span>
+                            </a>
                         </div>
-                        <div class="info-card">
+                        <!-- 홈구장 & 대표 먹거리 카드 + 직관 예매 링크 -->
+                        <div class="info-card stadium-card">
                             <div class="card-icon">🍗</div>
                             <h4>홈구장 & 대표 먹거리</h4>
                             <p id="foodStadium"></p>
+                            <a id="ticketLink" href="#" target="_blank" rel="noopener noreferrer" class="action-link-btn ticket-btn">
+                                <span>🎫 직관 티켓 예매하기</span>
+                            </a>
                         </div>
                     </div>
 
@@ -111,10 +133,27 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button type="button" id="copyBtn" class="btn-secondary">📋 결과 복사하기</button>
-                    <button type="button" id="downloadBtn" class="btn-secondary" style="background: #059669;">📥 리포트 다운로드</button>
+                    <button type="button" id="saveImageBtn" class="btn-action-primary">
+                        <span>📸 결과 카드 이미지 저장 (PNG)</span>
+                    </button>
+                    <button type="button" id="copyBtn" class="btn-secondary">📋 결과 복사</button>
+                    <button type="button" id="downloadBtn" class="btn-secondary">📥 리포트 다운로드</button>
                     <button type="button" id="retryBtn" class="btn-outline">🔄 다시 테스트하기</button>
                 </div>
+            </div>
+        </section>
+
+        <!-- 2026 KBO 10개 구단 한눈에 둘러보기 퀵 뷰 섹션 -->
+        <section class="teams-explore-section">
+            <div class="teams-explore-header" id="toggleTeamsBtn">
+                <div class="explore-title-wrap">
+                    <span class="explore-icon">⚾</span>
+                    <h3>2026 KBO 10개 구단 한눈에 둘러보기</h3>
+                </div>
+                <span class="toggle-arrow" id="toggleArrow">▼</span>
+            </div>
+            <div class="teams-grid hidden" id="teamsGrid">
+                <!-- 10개 구단 카드들이 app.js에서 동적으로 렌더링됩니다 -->
             </div>
         </section>
 

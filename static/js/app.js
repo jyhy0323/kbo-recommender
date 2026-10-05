@@ -373,7 +373,7 @@ quizForm.addEventListener("submit", async (e) => {
     }
 });
 
-// KBO 10개 구단 공식 엠블럼, 고유 테마 컬러, 대표 투수/타자 간판스타 매핑 정보
+// KBO 10개 구단 공식 엠블럼, 고유 테마 컬러, 간판스타, 홈구장, 예매 링크 매핑 정보
 const kboTeamInfo = [
     {
         keywords: ["한화", "이글스", "HH"],
@@ -381,10 +381,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/HH.png",
         pitcher: "류현진",
         batter: "노시환",
+        stadium: "대전 한화생명 이글스파크",
+        ticketUrl: "https://www.ticketlink.co.kr/sports/baseball/63#reservation",
         primaryColor: "#F37321", // 한화 오렌지
         secondaryColor: "#25282A",
-        bgTint: "rgba(243, 115, 33, 0.12)",
-        glow: "rgba(243, 115, 33, 0.35)",
+        bgTint: "rgba(243, 115, 33, 0.14)",
+        glow: "rgba(243, 115, 33, 0.4)",
         badgeBg: "#FFF1E8",
         badgeText: "#D6590A"
     },
@@ -394,10 +396,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/HT.png",
         pitcher: "양현종",
         batter: "김도영",
+        stadium: "광주-기아 챔피언스 필드",
+        ticketUrl: "https://www.ticketlink.co.kr/sports/baseball/62#reservation",
         primaryColor: "#C41230", // 타이거즈 레드
         secondaryColor: "#0C2340",
-        bgTint: "rgba(196, 18, 48, 0.12)",
-        glow: "rgba(196, 18, 48, 0.35)",
+        bgTint: "rgba(196, 18, 48, 0.14)",
+        glow: "rgba(196, 18, 48, 0.4)",
         badgeBg: "#FFEAEF",
         badgeText: "#A80D26"
     },
@@ -407,10 +411,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/SS.png",
         pitcher: "원태인",
         batter: "구자욱",
+        stadium: "대구 삼성 라이온즈 파크",
+        ticketUrl: "https://www.ticketlink.co.kr/sports/baseball/57#reservation",
         primaryColor: "#0066B3", // 라이온즈 블루
         secondaryColor: "#C0C0C0",
-        bgTint: "rgba(0, 102, 179, 0.12)",
-        glow: "rgba(0, 102, 179, 0.35)",
+        bgTint: "rgba(0, 102, 179, 0.14)",
+        glow: "rgba(0, 102, 179, 0.4)",
         badgeBg: "#EBF5FF",
         badgeText: "#005291"
     },
@@ -420,10 +426,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/LG.png",
         pitcher: "임찬규",
         batter: "오지환",
+        stadium: "서울 잠실 야구장",
+        ticketUrl: "https://www.ticketlink.co.kr/sports/baseball/64#reservation",
         primaryColor: "#C30452", // 트윈스 레드/핑크
         secondaryColor: "#000000",
-        bgTint: "rgba(195, 4, 82, 0.12)",
-        glow: "rgba(195, 4, 82, 0.35)",
+        bgTint: "rgba(195, 4, 82, 0.14)",
+        glow: "rgba(195, 4, 82, 0.4)",
         badgeBg: "#FFEAF2",
         badgeText: "#A10041"
     },
@@ -433,10 +441,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/OB.png",
         pitcher: "곽빈",
         batter: "양의지",
+        stadium: "서울 잠실 야구장",
+        ticketUrl: "https://ticket.interpark.com/Contents/Sports/GoodsInfo?SportsCode=07001&TeamCode=PB004",
         primaryColor: "#131230", // 딥 네이비
         secondaryColor: "#ED1C24",
-        bgTint: "rgba(19, 18, 48, 0.12)",
-        glow: "rgba(19, 18, 48, 0.35)",
+        bgTint: "rgba(19, 18, 48, 0.14)",
+        glow: "rgba(19, 18, 48, 0.4)",
         badgeBg: "#ECECF8",
         badgeText: "#131230"
     },
@@ -446,10 +456,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/KT.png",
         pitcher: "고영표",
         batter: "안현민",
+        stadium: "수원 KT 위즈 파크",
+        ticketUrl: "https://www.ticketlink.co.kr/sports/baseball/67#reservation",
         primaryColor: "#221F1F", // 매직 블랙
         secondaryColor: "#EC1C24",
-        bgTint: "rgba(236, 28, 36, 0.12)",
-        glow: "rgba(236, 28, 36, 0.35)",
+        bgTint: "rgba(236, 28, 36, 0.14)",
+        glow: "rgba(236, 28, 36, 0.4)",
         badgeBg: "#FFEBEB",
         badgeText: "#C41219"
     },
@@ -459,10 +471,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/SK.png",
         pitcher: "김광현",
         batter: "최정",
+        stadium: "인천 SSG 랜더스필드",
+        ticketUrl: "https://www.ticketlink.co.kr/sports/baseball/499#reservation",
         primaryColor: "#CE0E2D", // 랜더스 레드
         secondaryColor: "#BA9653",
-        bgTint: "rgba(206, 14, 45, 0.12)",
-        glow: "rgba(206, 14, 45, 0.35)",
+        bgTint: "rgba(206, 14, 45, 0.14)",
+        glow: "rgba(206, 14, 45, 0.4)",
         badgeBg: "#FFEBEE",
         badgeText: "#B00924"
     },
@@ -472,10 +486,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/LT.png",
         pitcher: "박세웅",
         batter: "한동희",
+        stadium: "부산 사직 야구장",
+        ticketUrl: "https://www.giantsclub.com/html/?pcode=257",
         primaryColor: "#002955", // 헤리티지 블루
         secondaryColor: "#D31145",
-        bgTint: "rgba(0, 41, 85, 0.12)",
-        glow: "rgba(0, 41, 85, 0.35)",
+        bgTint: "rgba(0, 41, 85, 0.14)",
+        glow: "rgba(0, 41, 85, 0.4)",
         badgeBg: "#EBF3FB",
         badgeText: "#002955"
     },
@@ -485,10 +501,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/NC.png",
         pitcher: "구창모",
         batter: "김주원",
+        stadium: "창원 NC 파크",
+        ticketUrl: "https://www.ticketlink.co.kr/sports/baseball/65#reservation",
         primaryColor: "#315288", // 마린 블루
         secondaryColor: "#AF9165",
-        bgTint: "rgba(49, 82, 136, 0.12)",
-        glow: "rgba(49, 82, 136, 0.35)",
+        bgTint: "rgba(49, 82, 136, 0.14)",
+        glow: "rgba(49, 82, 136, 0.4)",
         badgeBg: "#EDF2FA",
         badgeText: "#25406B"
     },
@@ -498,10 +516,12 @@ const kboTeamInfo = [
         logo: "/static/images/teams/WO.png",
         pitcher: "안우진",
         batter: "이주형",
+        stadium: "서울 고척 스카이돔",
+        ticketUrl: "https://ticket.interpark.com/Contents/Sports/GoodsInfo?SportsCode=07001&TeamCode=PB003",
         primaryColor: "#570514", // 버건디
         secondaryColor: "#A7A9AC",
-        bgTint: "rgba(87, 5, 20, 0.12)",
-        glow: "rgba(87, 5, 20, 0.35)",
+        bgTint: "rgba(87, 5, 20, 0.14)",
+        glow: "rgba(87, 5, 20, 0.4)",
         badgeBg: "#F7EAEB",
         badgeText: "#570514"
     }
@@ -537,6 +557,19 @@ function displayResult(data) {
 
         document.getElementById("pitcherName").innerText = teamTheme.pitcher;
         document.getElementById("batterName").innerText = teamTheme.batter;
+
+        // 유튜브 응원가 바로가기 링크 설정
+        const youtubeBtn = document.getElementById("youtubeCheerLink");
+        if (youtubeBtn) {
+            const cheerQuery = encodeURIComponent(`${teamTheme.fullName} ${data.cheer_song || '응원가'}`);
+            youtubeBtn.href = `https://www.youtube.com/results?search_query=${cheerQuery}`;
+        }
+
+        // 직관 티켓 예매하기 링크 설정
+        const ticketBtn = document.getElementById("ticketLink");
+        if (ticketBtn) {
+            ticketBtn.href = teamTheme.ticketUrl || "https://www.ticketlink.co.kr";
+        }
     } else {
         teamEmblem.src = "/static/icons/icon-192.png";
         teamEmblem.alt = teamName;
@@ -565,7 +598,7 @@ copyBtn.addEventListener("click", () => {
     const reason = document.getElementById("resultReason").innerText;
     const cheer = document.getElementById("cheerSong").innerText;
 
-    const shareText = `⚾ [AI KBO 야구 응원팀 추천 결과]\n\n나의 추천 구단: ${team}\n${headline}\n\n🎯 추천 이유:\n${reason}\n\n🎵 대표 응원가:\n${cheer}\n\n너도 테스트해봐!`;
+    const shareText = `⚾ [AI KBO 야구 응원팀 추천 결과]\n\n나의 추천 구단: ${team}\n${headline}\n\n🎯 추천 이유:\n${reason}\n\n🎵 대표 응원가:\n${cheer}\n\n너도 테스트해봐! 👉 https://kbo-recommender.vercel.app`;
 
     navigator.clipboard.writeText(shareText).then(() => {
         alert("추천 결과가 클립보드에 복사되었습니다! 친구들에게 공유해 보세요 🎉");
@@ -584,6 +617,9 @@ downloadBtn.addEventListener("click", () => {
     const reason = document.getElementById("resultReason").innerText;
     const pitcher = document.getElementById("pitcherName")?.innerText || '';
     const batter = document.getElementById("batterName")?.innerText || '';
+    const cheer = document.getElementById("cheerSong").innerText;
+    const food = document.getElementById("foodStadium").innerText;
+    const vibe = document.getElementById("recentVibe").innerText;
 
     const markdownContent = `# ⚾ 나의 AI KBO 응원팀 매칭 리포트\n\n` +
         `> **${headline}**\n\n` +
@@ -615,6 +651,43 @@ downloadBtn.addEventListener("click", () => {
     URL.revokeObjectURL(url);
 });
 
+// 6-2. SNS 공유용 결과 카드 이미지(PNG) 저장 기능 (html2canvas)
+const saveImageBtn = document.getElementById("saveImageBtn");
+if (saveImageBtn) {
+    saveImageBtn.addEventListener("click", () => {
+        const card = document.getElementById("resultCard");
+        if (!card) return;
+
+        saveImageBtn.disabled = true;
+        saveImageBtn.innerText = "📸 이미지 캡처 중...";
+
+        if (typeof html2canvas === 'undefined') {
+            alert("이미지 생성 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해 주세요.");
+            saveImageBtn.disabled = false;
+            saveImageBtn.innerHTML = "<span>📸 결과 카드 이미지 저장 (PNG)</span>";
+            return;
+        }
+
+        html2canvas(card, {
+            scale: 2, // 선명한 고해상도 이미지 출력
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#0b1220"
+        }).then(canvas => {
+            const team = document.getElementById("primaryTeam").innerText || "KBO";
+            const link = document.createElement("a");
+            link.download = `${team.replace(/\s+/g, '_')}_AI추천결과.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }).catch(err => {
+            alert("이미지 생성 중 오류가 발생했습니다: " + err.message);
+        }).finally(() => {
+            saveImageBtn.disabled = false;
+            saveImageBtn.innerHTML = "<span>📸 결과 카드 이미지 저장 (PNG)</span>";
+        });
+    });
+}
+
 // 7. 다시 테스트하기 (초기화)
 retryBtn.addEventListener("click", () => {
     for (let key in userAnswers) {
@@ -629,5 +702,46 @@ retryBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-// 앱 시작 시 첫 번째 카드 렌더링
+// 8. 2026 KBO 10개 구단 퀵 둘러보기 렌더링 & 토글
+function renderTeamsExplorer() {
+    const teamsGrid = document.getElementById("teamsGrid");
+    const toggleBtn = document.getElementById("toggleTeamsBtn");
+    const toggleArrow = document.getElementById("toggleArrow");
+
+    if (!teamsGrid || !toggleBtn) return;
+
+    teamsGrid.innerHTML = kboTeamInfo.map(t => `
+        <div class="team-mini-card" style="--team-mini-color: ${t.primaryColor};">
+            <div class="mini-card-top">
+                <img src="${t.logo}" alt="${t.fullName}" class="mini-emblem">
+                <div class="mini-team-info">
+                    <h4>${t.fullName}</h4>
+                    <span class="mini-stadium">🏟️ ${t.stadium}</span>
+                </div>
+            </div>
+            <div class="mini-stars">
+                <span>⚾ 투수: <strong>${t.pitcher}</strong></span>
+                <span>🏏 타자: <strong>${t.batter}</strong></span>
+            </div>
+            <a href="${t.ticketUrl}" target="_blank" rel="noopener noreferrer" class="mini-ticket-btn">
+                🎫 예매하기
+            </a>
+        </div>
+    `).join("");
+
+    toggleBtn.addEventListener("click", () => {
+        const isHidden = teamsGrid.classList.contains("hidden");
+        if (isHidden) {
+            teamsGrid.classList.remove("hidden");
+            toggleArrow.innerText = "▲";
+        } else {
+            teamsGrid.classList.add("hidden");
+            toggleArrow.innerText = "▼";
+        }
+    });
+}
+
+// 앱 시작 시 첫 번째 카드 렌더링 및 10개 구단 둘러보기 세팅
 renderCurrentQuestion();
+renderTeamsExplorer();
+
