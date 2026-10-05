@@ -25,6 +25,21 @@ if not SERPER_API_KEY:
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
+# 세션 쿠키 설정: HTTPS / LMS iframe 임베드 / 데스크톱 크롬 완벽 호환
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="None" if os.getenv("VERCEL") else "Lax",
+    SESSION_COOKIE_SECURE=True if os.getenv("VERCEL") else False,
+)
+
+@app.after_request
+def add_no_cache_headers(response):
+    """로그인 상태 변경 시 브라우저 캐시로 인한 구 화면 표시 방지"""
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
 # 3. Serper API를 활용한 KBO 최신 뉴스 검색 함수
@@ -75,17 +90,39 @@ def index():
         return render_template("login.html")
     return render_template("index.html")
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    data = request.get_json() or {}
-    password = str(data.get("password", "")).strip()
+    if request.method == "GET":
+        pw_param = request.args.get("pw")
+        if pw_param and pw_param.strip() == ACCESS_PASSWORD:
+            session["authenticated"] = True
+            session.permanent = True
+            logging.info("🔓 GET /login URL 쿼리 파라미터를 통한 원클릭 자동 인증 성공")
+            return redirect(url_for("index"))
+        if session.get("authenticated"):
+            return redirect(url_for("index"))
+        return render_template("login.html")
+
+    # POST 처리 (JSON 요청 및 일반 Form POST 모두 지원)
+    password = ""
+    if request.is_json:
+        data = request.get_json() or {}
+        password = str(data.get("password", "")).strip()
+    else:
+        password = str(request.form.get("password", "")).strip()
+
     if password == ACCESS_PASSWORD:
         session["authenticated"] = True
         session.permanent = True
         logging.info("🔓 보안 인증 성공: 0110")
-        return jsonify({"success": True})
+        if request.is_json:
+            return jsonify({"success": True})
+        return redirect(url_for("index"))
+
     logging.warning("🔒 보안 인증 실패 (잘못된 비밀번호 입력)")
-    return jsonify({"success": False, "error": "비밀번호가 올바르지 않습니다."}), 401
+    if request.is_json:
+        return jsonify({"success": False, "error": "비밀번호가 올바르지 않습니다."}), 401
+    return render_template("login.html", error="비밀번호가 올바르지 않습니다.")
 
 @app.route("/logout")
 def logout():
