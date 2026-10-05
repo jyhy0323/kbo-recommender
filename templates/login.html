@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보안 접근 인증 | AI KBO 야구 응원팀 추천기</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#0a0f1d">
+</head>
+<body class="login-body">
+    <!-- 스타디움 조명 앰비언트 배경 -->
+    <div class="stadium-backdrop" aria-hidden="true">
+        <div class="floodlight-beam beam-left"></div>
+        <div class="floodlight-beam beam-center"></div>
+        <div class="floodlight-beam beam-right"></div>
+        <div class="field-grass-glow"></div>
+        <div class="stadium-vignette"></div>
+    </div>
+
+    <div class="login-wrapper">
+        <div class="login-card" id="loginBox">
+            <!-- 자물쇠 보안 헤더 -->
+            <div class="login-header">
+                <div class="lock-icon-wrap">
+                    <span class="lock-icon">🔒</span>
+                </div>
+                <div class="badge">⚾ AI KBO RECORDER</div>
+                <h1 class="login-title">보안 접근 인증</h1>
+                <p class="login-subtitle">AI KBO 응원팀 추천 서비스를 이용하시려면 비밀번호를 입력해 주세요.</p>
+            </div>
+
+            <!-- 비밀번호 입력 폼 -->
+            <form id="loginForm" novalidate>
+                <div class="form-group password-group">
+                    <label for="password">접속 비밀번호</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="비밀번호 4자리 입력" required autofocus autocomplete="current-password">
+                        <button type="button" id="togglePasswordBtn" class="toggle-password-btn" title="비밀번호 표시/숨김">
+                            👁️
+                        </button>
+                    </div>
+                    <p id="loginError" class="login-error-msg hidden"></p>
+                </div>
+
+                <button type="submit" id="loginSubmitBtn" class="btn-primary">
+                    <span class="btn-text">보안 인증 및 스타디움 입장 ⚾</span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>🔒 암호화된 세션으로 보호되는 비공개 서비스입니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 로그인 스크립트 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("loginForm");
+            const passwordInput = document.getElementById("password");
+            const toggleBtn = document.getElementById("togglePasswordBtn");
+            const errorMsg = document.getElementById("loginError");
+            const submitBtn = document.getElementById("loginSubmitBtn");
+            const loginBox = document.getElementById("loginBox");
+
+            // 비밀번호 표시 / 숨김 토글
+            toggleBtn.addEventListener("click", () => {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    toggleBtn.textContent = "🙈";
+                } else {
+                    passwordInput.type = "password";
+                    toggleBtn.textContent = "👁️";
+                }
+            });
+
+            // 로그인 폼 제출
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const password = passwordInput.value.trim();
+
+                if (!password) {
+                    showError("비밀번호를 입력해 주세요.");
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.querySelector(".btn-text").textContent = "인증 확인 중...";
+                hideError();
+
+                try {
+                    const response = await fetch("/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ password: password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        // 로그인 성공 시 메인 화면으로 새로고침
+                        window.location.reload();
+                    } else {
+                        showError(data.error || "비밀번호가 올바르지 않습니다.");
+                        loginBox.classList.add("shake-animation");
+                        setTimeout(() => loginBox.classList.remove("shake-animation"), 500);
+                        passwordInput.select();
+                    }
+                } catch (err) {
+                    showError("서버와 통신할 수 없습니다. 잠시 후 다시 시도해 주세요.");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.querySelector(".btn-text").textContent = "보안 인증 및 스타디움 입장 ⚾";
+                }
+            });
+
+            function showError(msg) {
+                errorMsg.textContent = msg;
+                errorMsg.classList.remove("hidden");
+            }
+
+            function hideError() {
+                errorMsg.textContent = "";
+                errorMsg.classList.add("hidden");
+            }
+        });
+    </script>
+</body>
+</html>

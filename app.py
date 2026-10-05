@@ -2,7 +2,7 @@ import os
 import json
 import logging
 import requests
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from dotenv import load_dotenv
 from google import genai
 
@@ -13,14 +13,18 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 SERPER_API_KEY = os.getenv("SERPER_API_KEY")
+ACCESS_PASSWORD = os.getenv("ACCESS_PASSWORD", "0110")
+SECRET_KEY = os.getenv("SECRET_KEY", "kbo_2026_recommender_secret_session_key_0110")
 
 if not GEMINI_API_KEY:
     logging.warning("⚠️ GEMINI_API_KEY가 .env 파일에 설정되지 않았습니다.")
 if not SERPER_API_KEY:
     logging.warning("⚠️ SERPER_API_KEY가 .env 파일에 설정되지 않았습니다.")
 
-# 2. Flask 앱 생성 및 Gemini 클라이언트 초기화
+# 2. Flask 앱 생성 및 세션 키 / Gemini 클라이언트 초기화
 app = Flask(__name__)
+app.secret_key = SECRET_KEY
+
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 
 # 3. Serper API를 활용한 KBO 최신 뉴스 검색 함수
@@ -56,14 +60,37 @@ def get_kbo_latest_context():
         logging.error(f"⚠️ Serper 검색 중 예외 발생: {e}")
         return "검색 연결 오류 (기본 지식으로 추천)"
 
-# 4. 메인 화면 Route
+# 4. 보안 접근 인증 및 라우트
 @app.route("/")
 def index():
+    if not session.get("authenticated"):
+        return render_template("login.html")
     return render_template("index.html")
 
-# 5. 추천 생성 API Route
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json() or {}
+    password = str(data.get("password", "")).strip()
+    if password == ACCESS_PASSWORD:
+        session["authenticated"] = True
+        session.permanent = True
+        logging.info("🔓 보안 인증 성공: 0110")
+        return jsonify({"success": True})
+    logging.warning("🔒 보안 인증 실패 (잘못된 비밀번호 입력)")
+    return jsonify({"success": False, "error": "비밀번호가 올바르지 않습니다."}), 401
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    logging.info("🔒 사용자 세션 로그아웃 완료")
+    return redirect(url_for("index"))
+
+# 5. 추천 생성 API Route (보안 인증 필수)
 @app.route("/recommend", methods=["POST"])
 def recommend():
+    if not session.get("authenticated"):
+        return jsonify({"success": False, "error": "보안 인증이 필요합니다. 먼저 로그인해 주세요."}), 401
+
     try:
         data = request.get_json()
         if not data or "answers" not in data:
