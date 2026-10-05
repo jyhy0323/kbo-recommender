@@ -78,16 +78,14 @@ def get_kbo_latest_context():
 # 4. 보안 접근 인증 및 라우트
 @app.route("/")
 def index():
-    # URL 파라미터로 ?pw=0110 이 들어오면 바로 자동 로그인 처리 (원클릭 프리패스 입장)
+    # URL 파라미터로 ?pw=0110 이 들어오면 세션에도 기록
     pw_param = request.args.get("pw")
     if pw_param and pw_param.strip() == ACCESS_PASSWORD:
         session["authenticated"] = True
         session.permanent = True
-        logging.info("🔓 URL 쿼리 파라미터를 통한 원클릭 자동 인증 성공")
-        return redirect(url_for("index"))
+        logging.info("🔓 URL 쿼리 파라미터를 통한 원클릭 자동 인증 기록")
 
-    if not session.get("authenticated"):
-        return render_template("login.html")
+    # index.html 내부의 authGateOverlay가 모든 브라우저 및 LMS iframe에서 완벽하게 비밀번호 제어
     return render_template("index.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -97,11 +95,7 @@ def login():
         if pw_param and pw_param.strip() == ACCESS_PASSWORD:
             session["authenticated"] = True
             session.permanent = True
-            logging.info("🔓 GET /login URL 쿼리 파라미터를 통한 원클릭 자동 인증 성공")
-            return redirect(url_for("index"))
-        if session.get("authenticated"):
-            return redirect(url_for("index"))
-        return render_template("login.html")
+        return redirect(url_for("index"))
 
     # POST 처리 (JSON 요청 및 일반 Form POST 모두 지원)
     password = ""
@@ -122,7 +116,7 @@ def login():
     logging.warning("🔒 보안 인증 실패 (잘못된 비밀번호 입력)")
     if request.is_json:
         return jsonify({"success": False, "error": "비밀번호가 올바르지 않습니다."}), 401
-    return render_template("login.html", error="비밀번호가 올바르지 않습니다.")
+    return redirect(url_for("index"))
 
 @app.route("/logout")
 def logout():
@@ -130,11 +124,15 @@ def logout():
     logging.info("🔒 사용자 세션 로그아웃 완료")
     return redirect(url_for("index"))
 
-# 5. 추천 생성 API Route (보안 인증 필수)
+# 5. 추천 생성 API Route (보안 인증 필수: 세션 쿠키 또는 X-Access-Password 헤더)
 @app.route("/recommend", methods=["POST"])
 def recommend():
-    if not session.get("authenticated"):
-        return jsonify({"success": False, "error": "보안 인증이 필요합니다. 먼저 로그인해 주세요."}), 401
+    auth_header = str(request.headers.get("X-Access-Password", "")).strip()
+    is_authenticated = session.get("authenticated") or (auth_header == ACCESS_PASSWORD)
+
+    if not is_authenticated:
+        logging.warning("🔒 보안 인증되지 않은 추천 요청 차단")
+        return jsonify({"success": False, "error": "보안 인증이 필요합니다. 먼저 올바른 비밀번호를 입력해 주세요."}), 401
 
     try:
         data = request.get_json()

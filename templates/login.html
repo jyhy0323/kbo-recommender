@@ -53,13 +53,6 @@
                 </button>
             </form>
 
-            <!-- LMS 등 iframe 내부 임베드 시 새 창 안내 -->
-            <div id="iframeNotice" style="display: none; margin-top: 16px; text-align: center;">
-                <a href="https://kbo-recommender.vercel.app?pw=0110" target="_blank" style="display: inline-block; padding: 9px 16px; font-size: 0.85rem; color: #93c5fd; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 8px; text-decoration: none; font-weight: 600;">
-                    🖥️ LMS 화면 안에서 로그인이 안 될 때: 새 창에서 열기 ↗
-                </a>
-            </div>
-
             <div class="login-footer">
                 <p>🔒 암호화된 세션으로 보호되는 비공개 서비스입니다.</p>
             </div>
@@ -75,12 +68,6 @@
             const errorMsg = document.getElementById("loginError");
             const submitBtn = document.getElementById("loginSubmitBtn");
             const loginBox = document.getElementById("loginBox");
-            const iframeNotice = document.getElementById("iframeNotice");
-
-            // LMS 또는 타 사이트 iframe 내부에 임베드되었는지 감지
-            if (window.self !== window.top && iframeNotice) {
-                iframeNotice.style.display = "block";
-            }
 
             // 비밀번호 표시 / 숨김 토글
             toggleBtn.addEventListener("click", () => {

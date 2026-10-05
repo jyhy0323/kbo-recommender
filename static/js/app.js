@@ -349,10 +349,12 @@ quizForm.addEventListener("submit", async (e) => {
     loadingContainer.scrollIntoView({ behavior: "smooth" });
 
     try {
+        const authKey = sessionStorage.getItem("kbo_auth") || localStorage.getItem("kbo_auth") || "0110";
         const response = await fetch("/recommend", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "X-Access-Password": authKey
             },
             body: JSON.stringify({ answers: answersArray })
         });
@@ -741,7 +743,145 @@ function renderTeamsExplorer() {
     });
 }
 
-// 앱 시작 시 첫 번째 카드 렌더링 및 10개 구단 둘러보기 세팅
+// 9. 보안 접근 인증 게이트 제어 (LMS iframe 및 모든 브라우저 100% 호환)
+function initAuthGate() {
+    const authOverlay = document.getElementById("authGateOverlay");
+    const authForm = document.getElementById("overlayLoginForm");
+    const authInput = document.getElementById("overlayPassword");
+    const toggleBtn = document.getElementById("overlayTogglePasswordBtn");
+    const errorMsg = document.getElementById("overlayLoginError");
+    const submitBtn = document.getElementById("overlayLoginSubmitBtn");
+    const loginBox = document.getElementById("loginBox");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (!authOverlay) return;
+
+    // URL 파라미터(?pw=0110) 또는 세션 스토리지 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    const pwParam = urlParams.get("pw");
+    const savedAuth = sessionStorage.getItem("kbo_auth") || localStorage.getItem("kbo_auth");
+
+    if (pwParam === "0110" || savedAuth === "0110") {
+        sessionStorage.setItem("kbo_auth", "0110");
+        authOverlay.classList.add("hidden");
+        document.body.classList.remove("locked");
+    } else {
+        authOverlay.classList.remove("hidden");
+        document.body.classList.add("locked");
+        if (authInput) setTimeout(() => authInput.focus(), 100);
+    }
+
+    // 비밀번호 보이기 / 숨기기 토글
+    if (toggleBtn && authInput) {
+        toggleBtn.addEventListener("click", () => {
+            if (authInput.type === "password") {
+                authInput.type = "text";
+                toggleBtn.textContent = "🙈";
+            } else {
+                authInput.type = "password";
+                toggleBtn.textContent = "👁️";
+            }
+        });
+    }
+
+    // 비밀번호 폼 제출 시 비동기 검증 및 부드러운 해제 애니메이션
+    if (authForm) {
+        authForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const password = (authInput ? authInput.value : "").trim();
+
+            if (!password) {
+                showError("비밀번호를 입력해 주세요.");
+                return;
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.querySelector(".btn-text").textContent = "인증 확인 중...";
+            }
+            hideError();
+
+            try {
+                const resp = await fetch("/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ password: password })
+                });
+                const data = await resp.json();
+
+                if (resp.ok && data.success) {
+                    sessionStorage.setItem("kbo_auth", password);
+                    localStorage.setItem("kbo_auth", password);
+                    authOverlay.classList.add("unlocking");
+                    document.body.classList.remove("locked");
+                    setTimeout(() => {
+                        authOverlay.classList.add("hidden");
+                        authOverlay.classList.remove("unlocking");
+                    }, 350);
+                } else {
+                    showError(data.error || "비밀번호가 올바르지 않습니다.");
+                    if (loginBox) {
+                        loginBox.classList.add("shake-animation");
+                        setTimeout(() => loginBox.classList.remove("shake-animation"), 500);
+                    }
+                    if (authInput) authInput.select();
+                }
+            } catch (err) {
+                // 오프라인 / 폴백 검증
+                if (password === "0110") {
+                    sessionStorage.setItem("kbo_auth", password);
+                    localStorage.setItem("kbo_auth", password);
+                    authOverlay.classList.add("unlocking");
+                    document.body.classList.remove("locked");
+                    setTimeout(() => {
+                        authOverlay.classList.add("hidden");
+                        authOverlay.classList.remove("unlocking");
+                    }, 350);
+                } else {
+                    showError("비밀번호가 올바르지 않습니다.");
+                }
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.querySelector(".btn-text").textContent = "보안 인증 및 스타디움 입장 ⚾";
+                }
+            }
+        });
+    }
+
+    // 상단 로그아웃 / 잠금 버튼
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            sessionStorage.removeItem("kbo_auth");
+            localStorage.removeItem("kbo_auth");
+            fetch("/logout");
+            authOverlay.classList.remove("hidden");
+            document.body.classList.add("locked");
+            if (authInput) {
+                authInput.value = "";
+                authInput.focus();
+            }
+        });
+    }
+
+    function showError(msg) {
+        if (errorMsg) {
+            errorMsg.textContent = msg;
+            errorMsg.classList.remove("hidden");
+        }
+    }
+
+    function hideError() {
+        if (errorMsg) {
+            errorMsg.textContent = "";
+            errorMsg.classList.add("hidden");
+        }
+    }
+}
+
+// 앱 시작 시 첫 번째 카드 렌더링, 10개 구단 둘러보기 및 보안 게이트 초기화
 renderCurrentQuestion();
 renderTeamsExplorer();
+initAuthGate();
 

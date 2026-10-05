@@ -1098,8 +1098,43 @@ body {
 }
 
 /* ==========================================================================
-   보안 접근 인증 로그인 화면 스타일 (Login Gate)
+   보안 접근 인증 로그인 화면 스타일 (Login Gate & Overlay)
    ========================================================================== */
+.auth-gate-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #0a0f1d;
+    transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-gate-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: scale(1.03);
+}
+
+.auth-gate-overlay.unlocking {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: scale(0.97);
+}
+
+body.locked {
+    overflow: hidden !important;
+}
+
 .login-body {
     display: flex;
     align-items: center;

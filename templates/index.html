@@ -29,12 +29,49 @@
         <div class="stadium-vignette"></div>
     </div>
 
-    <div class="container">
+    <!-- 보안 접근 인증 오버레이 (LMS iframe 및 모든 데스크톱/모바일 브라우저 100% 호환) -->
+    <div class="auth-gate-overlay" id="authGateOverlay">
+        <div class="login-wrapper">
+            <div class="login-card" id="loginBox">
+                <div class="login-header">
+                    <div class="lock-icon-wrap">
+                        <span class="lock-icon">🔒</span>
+                    </div>
+                    <div class="badge">⚾ AI KBO RECORDER</div>
+                    <h1 class="login-title">보안 접근 인증</h1>
+                    <p class="login-subtitle">AI KBO 응원팀 추천 서비스를 이용하시려면 비밀번호를 입력해 주세요.</p>
+                </div>
+
+                <form id="overlayLoginForm" novalidate>
+                    <div class="form-group password-group">
+                        <label for="overlayPassword">접속 비밀번호</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="overlayPassword" name="password" placeholder="비밀번호 4자리 입력" required autofocus autocomplete="current-password">
+                            <button type="button" id="overlayTogglePasswordBtn" class="toggle-password-btn" title="비밀번호 표시/숨김">
+                                👁️
+                            </button>
+                        </div>
+                        <p id="overlayLoginError" class="login-error-msg hidden"></p>
+                    </div>
+
+                    <button type="submit" id="overlayLoginSubmitBtn" class="btn-primary">
+                        <span class="btn-text">보안 인증 및 스타디움 입장 ⚾</span>
+                    </button>
+                </form>
+
+                <div class="login-footer">
+                    <p>🔒 2026 KBO 공식 응원팀 맞춤 추천 서비스</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="mainContainer">
         <!-- 헤더 영역 -->
         <header class="header">
             <div class="header-top-bar">
                 <div class="badge">⚾ 2026 KBO 야구 성향 테스트</div>
-                <a href="/logout" class="logout-btn" title="보안 잠금 및 로그아웃">
+                <a href="/logout" class="logout-btn" id="logoutBtn" title="보안 잠금 및 로그아웃">
                     <span>🔒</span>
                     <span>잠금 / 로그아웃</span>
                 </a>
