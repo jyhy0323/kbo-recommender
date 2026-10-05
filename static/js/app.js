@@ -373,12 +373,14 @@ quizForm.addEventListener("submit", async (e) => {
     }
 });
 
-// KBO 10개 구단 공식 엠블럼 및 고유 테마 컬러 매핑 정보
+// KBO 10개 구단 공식 엠블럼, 고유 테마 컬러, 대표 투수/타자 간판스타 매핑 정보
 const kboTeamInfo = [
     {
         keywords: ["한화", "이글스", "HH"],
         fullName: "한화 이글스",
         logo: "/static/images/teams/HH.png",
+        pitcher: "류현진",
+        batter: "노시환",
         primaryColor: "#F37321", // 한화 오렌지
         secondaryColor: "#25282A",
         bgTint: "rgba(243, 115, 33, 0.12)",
@@ -390,6 +392,8 @@ const kboTeamInfo = [
         keywords: ["KIA", "기아", "타이거즈", "HT"],
         fullName: "KIA 타이거즈",
         logo: "/static/images/teams/HT.png",
+        pitcher: "양현종",
+        batter: "김도영",
         primaryColor: "#C41230", // 타이거즈 레드
         secondaryColor: "#0C2340",
         bgTint: "rgba(196, 18, 48, 0.12)",
@@ -401,6 +405,8 @@ const kboTeamInfo = [
         keywords: ["삼성", "라이온즈", "SS"],
         fullName: "삼성 라이온즈",
         logo: "/static/images/teams/SS.png",
+        pitcher: "원태인",
+        batter: "구자욱",
         primaryColor: "#0066B3", // 라이온즈 블루
         secondaryColor: "#C0C0C0",
         bgTint: "rgba(0, 102, 179, 0.12)",
@@ -412,6 +418,8 @@ const kboTeamInfo = [
         keywords: ["LG", "엘지", "트윈스"],
         fullName: "LG 트윈스",
         logo: "/static/images/teams/LG.png",
+        pitcher: "임찬규",
+        batter: "오지환",
         primaryColor: "#C30452", // 트윈스 레드/핑크
         secondaryColor: "#000000",
         bgTint: "rgba(195, 4, 82, 0.12)",
@@ -423,6 +431,8 @@ const kboTeamInfo = [
         keywords: ["두산", "베어스", "OB"],
         fullName: "두산 베어스",
         logo: "/static/images/teams/OB.png",
+        pitcher: "곽빈",
+        batter: "양의지",
         primaryColor: "#131230", // 딥 네이비
         secondaryColor: "#ED1C24",
         bgTint: "rgba(19, 18, 48, 0.12)",
@@ -434,6 +444,8 @@ const kboTeamInfo = [
         keywords: ["KT", "케이티", "위즈", "wiz"],
         fullName: "kt wiz",
         logo: "/static/images/teams/KT.png",
+        pitcher: "고영표",
+        batter: "안현민",
         primaryColor: "#221F1F", // 매직 블랙
         secondaryColor: "#EC1C24",
         bgTint: "rgba(236, 28, 36, 0.12)",
@@ -445,6 +457,8 @@ const kboTeamInfo = [
         keywords: ["SSG", "랜더스", "쓱", "SK"],
         fullName: "SSG 랜더스",
         logo: "/static/images/teams/SK.png",
+        pitcher: "김광현",
+        batter: "최정",
         primaryColor: "#CE0E2D", // 랜더스 레드
         secondaryColor: "#BA9653",
         bgTint: "rgba(206, 14, 45, 0.12)",
@@ -456,6 +470,8 @@ const kboTeamInfo = [
         keywords: ["롯데", "자이언츠", "LT"],
         fullName: "롯데 자이언츠",
         logo: "/static/images/teams/LT.png",
+        pitcher: "박세웅",
+        batter: "한동희",
         primaryColor: "#002955", // 헤리티지 블루
         secondaryColor: "#D31145",
         bgTint: "rgba(0, 41, 85, 0.12)",
@@ -467,6 +483,8 @@ const kboTeamInfo = [
         keywords: ["NC", "엔씨", "다이노스"],
         fullName: "NC 다이노스",
         logo: "/static/images/teams/NC.png",
+        pitcher: "구창모",
+        batter: "김주원",
         primaryColor: "#315288", // 마린 블루
         secondaryColor: "#AF9165",
         bgTint: "rgba(49, 82, 136, 0.12)",
@@ -478,6 +496,8 @@ const kboTeamInfo = [
         keywords: ["키움", "히어로즈", "WO"],
         fullName: "키움 히어로즈",
         logo: "/static/images/teams/WO.png",
+        pitcher: "안우진",
+        batter: "이주형",
         primaryColor: "#570514", // 버건디
         secondaryColor: "#A7A9AC",
         bgTint: "rgba(87, 5, 20, 0.12)",
@@ -503,7 +523,7 @@ function displayResult(data) {
     const resultCard = document.getElementById("resultCard");
     const teamEmblem = document.getElementById("teamEmblem");
 
-    // 구단 엠블럼 및 고유 테마 컬러 동적 적용
+    // 구단 엠블럼, 고유 테마 컬러, 대표 선수 동적 적용
     if (teamTheme) {
         teamEmblem.src = teamTheme.logo;
         teamEmblem.alt = teamTheme.fullName;
@@ -514,11 +534,16 @@ function displayResult(data) {
         resultCard.style.setProperty("--team-glow", teamTheme.glow);
         resultCard.style.setProperty("--team-badge-bg", teamTheme.badgeBg);
         resultCard.style.setProperty("--team-badge-text", teamTheme.badgeText);
+
+        document.getElementById("pitcherName").innerText = teamTheme.pitcher;
+        document.getElementById("batterName").innerText = teamTheme.batter;
     } else {
         teamEmblem.src = "/static/icons/icon-192.png";
         teamEmblem.alt = teamName;
         resultCard.style.setProperty("--team-primary", "#1a4b8c");
         resultCard.style.setProperty("--team-glow", "rgba(26, 75, 140, 0.2)");
+        document.getElementById("pitcherName").innerText = "에이스 투수";
+        document.getElementById("batterName").innerText = "간판 타자";
     }
 
     document.getElementById("matchRate").innerText = `매칭률 ${data.match_rate || 90}%`;
@@ -557,15 +582,17 @@ downloadBtn.addEventListener("click", () => {
     const matchRate = document.getElementById("matchRate").innerText;
     const subTeam = document.getElementById("subTeam").innerText;
     const reason = document.getElementById("resultReason").innerText;
-    const cheer = document.getElementById("cheerSong").innerText;
-    const food = document.getElementById("foodStadium").innerText;
-    const vibe = document.getElementById("recentVibe").innerText;
+    const pitcher = document.getElementById("pitcherName")?.innerText || '';
+    const batter = document.getElementById("batterName")?.innerText || '';
 
     const markdownContent = `# ⚾ 나의 AI KBO 응원팀 매칭 리포트\n\n` +
         `> **${headline}**\n\n` +
         `## 🏆 1순위 추천 구단: ${team} (${matchRate})\n` +
         `- **${subTeam}**\n\n` +
         `---\n\n` +
+        `### ⭐ 구단 대표 간판스타\n` +
+        `- **⚾ 대표 투수:** ${pitcher}\n` +
+        `- **🏏 대표 타자:** ${batter}\n\n` +
         `### 🎯 추천 이유\n` +
         `${reason}\n\n` +
         `### 🎵 대표 응원가\n` +

@@ -571,6 +571,85 @@ body {
     font-size: 0.98rem;
 }
 
+/* 구단 대표 간판스타 카드 */
+.star-players-block {
+    background: #ffffff;
+    border: 2px solid var(--team-primary, #e2e8f0);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 14px var(--team-glow, rgba(0, 0, 0, 0.05));
+    transition: all 0.3s ease;
+}
+
+.star-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.star-icon {
+    font-size: 1.15rem;
+}
+
+.star-header h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+}
+
+.star-players-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 480px) {
+    .star-players-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.player-pill {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+.player-pill:hover {
+    border-color: var(--team-primary, #3b82f6);
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--team-glow, rgba(0, 0, 0, 0.08));
+}
+
+.player-role {
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.pitcher-pill .player-role {
+    color: #0284c7;
+}
+
+.batter-pill .player-role {
+    color: #e11d48;
+}
+
+.player-name {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
